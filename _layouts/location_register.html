@@ -1,0 +1,117 @@
+---
+layout: locationdefault
+---
+
+{% assign parts = page.url | split: '/' %}
+
+{% if page.url contains '/cn/' %}
+{% assign location_name = parts[2] %}
+{% assign logo_url = '/cn/' | append: location_name %}
+{% assign translated_url = page.url | replace: '/cn/', '/' %}
+{% else %}
+{% assign location_name = parts[1] %}
+{% assign logo_url = '/' | append: location_name %}
+{% assign translated_url = '/cn' | append: page.url %}
+{% endif %}
+<section class="wrapper bg-light">
+  <div class="container pt-8 pt-md-12 pb-8 pb-md-8">
+    <div class="row gx-lg-8 gx-xl-0 gy-10 align-items-center">
+      <div class="col-lg-6 col-xl-5 position-relative d-none d-lg-block">
+        <figure class="ps-xxl-10"><img class="img-fluid" src="/assets/img/illustrations/3d5.png"
+            srcset="/assets/img/illustrations/3d5@2x.png 2x" alt="" /></figure>
+      </div>
+      <!--/column -->
+      <div class="col-lg-6 col-xl-5 offset-xl-1 text-center">
+        {% if location_name == 'sandiego' %}
+        <h2 class="display-2 mb-3">Sign up for a Coding Mind account</h2>
+        {% else %}
+        <h2 class="display-2 mb-3">{{ site.data.register[page.locale].register.header }}</h2>
+        {% endif %}
+        <form id="registerForm" class="contact-form needs-validation" novalidate>
+          <div class="messages"></div>
+          <div class="form-floating mb-4">
+            <input type="email" name="email" class="form-control" placeholder="{{ site.data.register[page.locale].register.email }}" required>
+            <label for="email">{{ site.data.register[page.locale].register.email }}</label>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="password" name="password" class="form-control" placeholder="{{ site.data.register[page.locale].register.password }}" required>
+            <label for="password">{{ site.data.register[page.locale].register.password }}</label>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="password" name="confirm_password" class="form-control" placeholder="{{ site.data.register[page.locale].register.confirm_password }}" required>
+            <label for="confirm_password">{{ site.data.register[page.locale].register.confirm_password }}</label>
+          </div>
+          <div class="row gx-2">
+            <div class="col-sm-6 form-floating mb-4">
+              <input type="text" name="parent_first_name" class="form-control" placeholder="{{ site.data.register[page.locale].register.parent_first_name }}" required>
+              <label for="parent_first_name">{{ site.data.register[page.locale].register.parent_first_name }}</label>
+            </div>
+            <div class="col-sm-6 form-floating mb-4">
+              <input type="text" name="parent_last_name" class="form-control" placeholder="{{ site.data.register[page.locale].register.parent_last_name }}" required>
+              <label for="parent_last_name">{{ site.data.register[page.locale].register.parent_last_name }}</label>
+            </div>
+          </div>
+          <div class="form-floating mb-4">
+            <input type='tel' name="phone" class="form-control" placeholder="{{ site.data.register[page.locale].register.phone }}" required>
+            <label for="phone">{{ site.data.register[page.locale].register.phone }}</label>
+          </div>
+          <div class="row gx-2">
+            <div class="col-sm-6 form-floating mb-4">
+              <input type="text" name="firstName" class="form-control" placeholder="{{ site.data.register[page.locale].register.firstname }}" required>
+              <label for="firstName">{{ site.data.register[page.locale].register.firstname }}</label>
+            </div>
+            <div class="col-sm-6 form-floating mb-4">
+              <input type="text" name="lastName" class="form-control" placeholder="{{ site.data.register[page.locale].register.lastname }}" required>
+              <label for="lastName">{{ site.data.register[page.locale].register.lastname }}</label>
+            </div>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="text" name="grade" class="form-control" placeholder="{{ site.data.register[page.locale].register.grade }}" required>
+            <label for="grade">{{ site.data.register[page.locale].register.grade }}</label>
+          </div>
+          <div class="form-floating mb-4">
+            <input type="date" name="dateOfBirth" class="form-control" placeholder="{{ site.data.register[page.locale].register.dateOfBirth }}">
+            <label for="dateOfBirth">{{ site.data.register[page.locale].register.dateOfBirth }}</label>
+          </div>
+          <button type="submit" class="btn btn-primary rounded-pill btn-send mb-3">
+            {{ site.data.register[page.locale].register.register }}
+          </button>
+        <!-- Loading indicator -->
+          <div class="loading-indicator" style="display: none;">
+            {{ site.data.register[page.locale].register.loading }}
+          </div>
+        </form>
+        <!-- /form -->
+      </div>
+      <!--/column -->
+    </div>
+    <!--/.row -->
+  </div>
+  <!-- /.container -->
+</section>
+<!-- /section -->
+
+<div id="confirmModal" class="modal fade" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Registration Form Saved</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-success" role="alert">
+          Your registration form has been saved successfully!
+        </div>
+        <p class="text-warning"><strong>Important:</strong> Please note that your registration is not complete until you complete the payment on the next page.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="confirmRedirect">I Understand, Continue to Payment</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/js/register.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+

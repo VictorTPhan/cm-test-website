@@ -1,0 +1,427 @@
+---
+layout: default
+---
+<section class="wrapper bg-soft-primary">
+  <div class="container pt-10 pt-md-14 text-center">
+    <div class="row">
+      <div class="col-md-10 col-lg-8 col-xl-8 col-xxl-6 mx-auto" data-cues="slideInDown" data-group="page-title">
+        <h1 class="display-1 mb-4">
+          {{ site.data.summercamp[page.locale].summer.header }}
+        </h1>
+        <p class="lead fs-lg px-xl-12 px-xxl-6 mb-7">
+          {{ site.data.summercamp[page.locale].summer.lead }}
+        </p>
+      </div>
+
+      <!-- Filters Section -->
+      <div class="d-flex justify-content-center mb-4 w-100">
+        <div class="mx-2">
+          <label for="locationFilter"></label>
+          <select id="locationFilter" class="form-select">
+            <!-- <option value="all">{{ site.data.summercamp[page.locale].summer.locationFilter }}</option> -->
+            <!-- Options will be added dynamically -->
+          </select>
+        </div>
+        <div class="mx-2">
+          <label for="gradeFilter"></label>
+          <select id="gradeFilter" class="form-select">
+            <option value="all">{{ site.data.summercamp[page.locale].summer.gradeFilter }}</option>
+            <!-- Options will be added dynamically -->
+          </select>
+        </div>
+      </div>
+      <!-- /column -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container -->
+</section>
+<!-- /section -->
+
+<section class="wrapper bg-light">
+  <div class="container pt-10 pb-19 pt-md-14 pb-md-20 text-center">
+    <div class="row card p-2 overflow-y-auto flex-row justify-content-center" id="camp-registration-grid">
+      <!-- Spinner and Content -->
+      <div class="d-flex justify-content-center">
+        <div id="formSpinner" class="spinner-border text-navy align-self-center" role="status"
+          style="width: 3rem; height: 3rem; display: none"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- /section -->
+
+<!-- The Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content p-0">
+      <div class="modal-header d-flex justify-content-center p-4">
+        <h5 class="modal-title text-center fs-28" id="myModalLabel">
+          {{ site.data.summercamp[page.locale].summer.modal }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="modalIframe" src="" frameborder="0" width="100%" height="500"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+  integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+  integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+<script>
+  var preference = window.location.href.indexOf("cn") == -1 ? "en" : "cn";
+  var fileToFetch = preference === "cn" ? "/assets/courses_cn.json" : "/assets/courses.json";
+
+
+  $(document).ready(function () {
+    // Adjust table on window resize
+    // adjustTableForMobile();
+    // $(window).resize(adjustTableForMobile);
+
+    // Function to handle modal show event
+    $("#myModal").on("show.bs.modal", function (event) {
+      var button = $(event.relatedTarget); // Button that triggered the modal
+      var url = button.attr("href"); // Get the URL from the href attribute
+      var iframe = $(this).find("#modalIframe");
+      iframe.attr("src", url); // Set the src attribute of the iframe
+    });
+
+    // Fetch and apply filters initially and on filter change
+    function fetchAndApplyFilters() {
+      $("#formSpinner").css("display", "block");
+      fetchJSONData()
+        .then(function (datesData, coursesData) {
+          $("#formSpinner").css("display", "none");
+          var selectedLocation = $("#locationFilter").val();
+          var selectedGrade = $("#gradeFilter").val();
+          //console.log("coursedata:", coursesData[0]);
+          //console.log("datesdate:", datesData[0]);
+          populateFilteredGrid(
+            datesData[0],
+            coursesData[0],
+            selectedLocation,
+            selectedGrade
+          );
+        })
+        .catch(function (error) {
+          $("#formSpinner").css("display", "none");
+          alert("Error: " + error);
+          console.error("Error fetching JSON data:", error);
+        });
+    }
+
+    // Set up change event listeners for filters
+    $("#locationFilter, #gradeFilter").change(fetchAndApplyFilters);
+
+    // Initial data fetch and setup
+    fetchAndApplyFilters(); // This replaces the initial call to populateGrid
+  });
+
+
+
+  // Fetch the courses data
+  $.getJSON(fileToFetch, function (data) {
+    var coursesData = Object.values(data).flat();
+    // Get all unique grades
+    var grades = new Set();
+    coursesData.forEach(function (course) {
+      grades.add(course.Grade);
+    });
+    // Get the location select element
+    var locationSelect = document.getElementById("locationFilter");
+    var gradeSelect = document.getElementById("gradeFilter");
+    // Populate the location select element
+    Object.keys(data).forEach(function (location) {
+      var option = document.createElement("option");
+      option.value = location;
+      option.text = location;
+      locationSelect.appendChild(option);
+    });
+    // Populate the grade select element
+    grades.forEach(function (grade) {
+      var option = document.createElement("option");
+      option.value = grade;
+      option.text = grade;
+      gradeSelect.appendChild(option);
+    });
+  });
+
+  // Function to fetch JSON data
+  function fetchJSONData() {
+    return $.when(
+      $.getJSON("/assets/dates.json"),
+      $.getJSON(fileToFetch)
+    );
+  }
+
+  function populateFilteredGrid(
+    datesData,
+    coursesData,
+    selectedLocation,
+    selectedGrade
+  ) {
+    var $grid = $("#camp-registration-grid");
+    $grid.empty(); // Clear the existing grid content
+
+    // Prepare the header for the table with dates
+    var $table = $(
+      '<table class="table table-striped" style="width: 100%; table-layout: fixed;">'
+    );
+
+    $grid.append($table); // Append table to the grid
+
+    var $thead = $("<thead th>");
+    var $headerRow = $(
+      '<tr style="box-shadow: 0rem 1.25rem 1.25rem -1.25rem rgba(30, 34, 40, 0.06);">'
+    );
+    $headerRow.css({
+      position: "sticky",
+      top: "4rem", // Fixed header position
+      backgroundColor: "#fff", // Ensuring background isn't transparent
+      zIndex: "1020", // Above the body content but below modals/dialogs
+    });
+
+    $headerRow.append(
+      '<th class="d-none d-xl-table-cell" style="vertical-align: middle; width: 30%;">{{ site.data.summercamp[page.locale].summer.courseName }}</th>'
+    );
+
+    var dateHeaders = Object.values(datesData)
+      .reduce((acc, date) => {
+        if (!acc.includes(date)) {
+          acc.push(date);
+        }
+        return acc;
+      }, [])
+      .sort();
+    
+      var dateHeaders2 = Object.values(datesData)
+      .reduce((acc, date) => {
+        if (!acc.includes(date)) {
+          acc.push(date);
+        }
+        return acc;
+      }, [])
+      .sort();
+
+    dateHeaders.forEach((date) => {
+      $headerRow.append(
+        $('<th style="vertical-align: middle; width: 15%;">').text(date)
+      );
+    });
+
+    $thead.append($headerRow);
+    $table.append($thead);
+
+    var $tbody = $("<tbody>");
+
+    var courseInfoMap = new Map();
+
+    Object.entries(coursesData).forEach(([location, courses]) => {
+      courses.forEach((course) => {
+        if (
+          (selectedLocation === "all" || location === selectedLocation) &&
+          (selectedGrade === "all" || course.Grade === selectedGrade)
+        ) {
+          var $row = $('<tr class="header-row">');
+          var $courseNameCell = $("<td>")
+            .text(course.Name)
+            .css("cursor", "pointer");
+          $row.append($courseNameCell);
+
+          // Details container for collapsible part
+          var $detailsRow = $(
+            '<tr class="details-row" style="display: none;">'
+          );
+          var $detailsCell = $('<td colspan="100%">');
+          //var $detailsContainer = $('<tr class="details-row" style="display: none;">');
+          //var $detailsCell = $('<td colspan="100%">');
+          //var $dateCell = $("<td>");
+          Object.entries(course.Dates).forEach(([date, link]) => {
+            var $dateInfo = $("<p>").text(date + " -  {{ site.data.summercamp[page.locale].summer.joinToday }}");
+            var $registerLink = $("<a>", {
+              href: link,
+              text: "Register",
+              target: "_blank",
+              class: "text-primary",
+            }).css({
+              margin: "0 10px",
+            });
+            $dateInfo.append($registerLink);
+            $detailsCell.append($dateInfo);
+          });
+          $detailsRow.append($detailsCell);
+          $tbody.append($detailsRow);
+
+          $courseNameCell.on("click", function () {
+            //console.log("clicked");
+            $(this)
+              .closest(".header-row")
+              .next(".details-row")
+              .slideToggle(200);
+          });
+        }
+      });
+
+      // handle mobile size end
+
+      courses.forEach((course) => {
+        // Filter condition here
+        if (
+          (selectedLocation === "all" || location === selectedLocation) &&
+          (selectedGrade === "all" || course.Grade === selectedGrade)
+        ) {
+          var entry = courseInfoMap.get(course.Name) || {
+            Name: course.Name,
+            Grade: course.Grade,
+            Price: course.Price,
+            Dates: {},
+            RegistrationLinks: course["Registration Links"],
+            CourseInfo: course["CourseInfo"],
+          };
+
+          // Populate dates where course is available
+          course.Dates.forEach((dateCode, index) => {
+            entry.Dates[datesData[dateCode]] = course["Registration Links"][index];
+            
+          });
+
+          courseInfoMap.set(course.Name, entry);
+        }
+      });
+    });
+
+    // Populate the body of the table
+    courseInfoMap.forEach((course) => {
+      var $row = $('<tr style="height: 50px; vertical-align: middle;">');
+      var $courseCell = $('<td style="width: 30%;">');
+      var $cardWrapper = $('<div class="card">');
+      var $imageContainer = $('<div style="text-align: center;">');
+      createImageElement(course.CourseInfo, $imageContainer);
+      $cardWrapper.append($imageContainer);
+
+
+      // Function to gather all date ranges
+      function getAllDateRanges(dates) {
+        var allDates = [];
+        for (var dateRange in dates) {
+          if (dates.hasOwnProperty(dateRange)) {
+            allDates.push(dateRange);
+          }
+        }
+        return allDates.join(", "); // Combines all date ranges into a single string separated by commas
+      }
+      // Get all date ranges as a string
+      var allDateRanges = getAllDateRanges(course.Dates);
+
+      var $detailsContainer = $('<div class="card-body p-4 p-md-2" style="text-align: center;">').append(
+        $("<strong>").text(course.Name),
+        $("<div>", { style: "font-size: 0.8em;" }).html(
+          "{{ site.data.summercamp[page.locale].summer.grade }}: " + course.Grade + "<br>{{ site.data.summercamp[page.locale].summer.price }}: $" + course.Price
+        ),
+        $("<div>", { class: "d-block d-xl-none" })
+          .html(
+            "{{ site.data.summercamp[page.locale].summer.availableDate }}: " +
+            allDateRanges
+          )
+          .css("font-size", "0.8em"),
+        $("<a>", {
+          href: "#",
+          class: "text-primary",
+          text: " {{ site.data.summercamp[page.locale].summer.learnMore }}",
+          click: function (e) {
+            e.preventDefault();
+            $("#myModal").find("#modalIframe").attr("src", course.CourseInfo);
+            $("#myModal").modal("show");
+          },
+        }).css("font-size", "0.8em"),
+        $('<br/><a class="d-block d-xl-none" href="' + course.RegistrationLinks[0] + '"> {{ site.data.summercamp[page.locale].summer.joinToday }}</a>').css("font-size", "0.8em"),
+
+      );
+
+      // 768px is a common breakpoint for mobile devices
+      // Additional information for mobile devices
+      // var updateContentForScreenSize = function () {
+      //   if ($(window).width() < 1200) {
+      //     adjustTableForMobile(); // Call the function immediately
+      //   }
+      // };
+
+      $cardWrapper.append($detailsContainer);
+      $courseCell.append($cardWrapper);
+      $row.append($courseCell);
+
+      dateHeaders.forEach((date) => {
+        var registerLink = course.Dates[date];
+        if (registerLink) {
+          var $registerText = $('<a>', {
+            href: registerLink,
+            class: "text-primary card py-2",
+            html: '✓<br><span style="font-size: 0.75em; color: #007bff;"> {{ site.data.summercamp[page.locale].summer.joinToday }}</span>',
+            target: "_blank",
+          });
+          $row.append($('<td style="width: 5%;">').append($registerText));
+        } else {
+          $row.append($('<td style="width: 5%;">').append($("<div class='d-flex justify-content-center'><div class='bg-soft-navy card py-3 w-50 '></div></div>")));
+        }
+      });
+
+      $tbody.append($row);
+    });
+    $table.append($tbody);
+    adjustTableForMobile();
+  }
+
+  function adjustTableForMobile() {
+    if ($(window).width() < 1200) { // Modified to be 1200px as table headers become unintelligible @ < 1200px
+      //updateContentForScreenSize(); // Call the function immediately
+      $("th:not(:first-child)").hide(); // Hide all but the first header column
+      $("td:not(:first-child)").hide(); // Hide all but the first column in data rows
+    } else {
+      $("th, td").show(); // Show all table cells
+
+
+      $(".header-row").off("click"); // Remove click events for desktop
+    }
+  }
+
+  $(window).resize(adjustTableForMobile); // Attach and call immediately
+
+  function createImageElement(url, $container) {
+    // Define the default image URL inside the function
+    var defaultImageUrl = "/img/my/app-dev-1.png"; // Update this URL to your preferred default image
+
+    $.get(url, function (data) {
+      var $html = $($.parseHTML(data));
+      var $image = $html.find('img:not([src$=".svg"])').eq(2);
+
+      var imageUrl;
+      if ($image.length) {
+        imageUrl = new URL($image.attr("src"), url).href;
+      } else {
+        imageUrl = defaultImageUrl; // Use default image if no valid image found
+      }
+
+      var $imageElement = $("<img>", {
+        class: "card-img-top rounded-top rounded-0",
+        src: imageUrl,
+        style:
+          "width: 100%; height: auto; display: block; margin-bottom: 5px; text-align: center;",
+      });
+      $container.prepend($imageElement);
+    }).fail(function () {
+      // Handle the case where the GET request itself fails
+      var $imageElement = $("<img>", {
+        class: "card-img-top rounded-top rounded-0",
+        src: defaultImageUrl, // Use default image on network or other failures
+        style:
+         "width: 100%; height: auto; display: block; margin-bottom: 5px; text-align: center;",
+      });
+      $container.prepend($imageElement);
+    });
+  }
+</script>

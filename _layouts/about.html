@@ -1,0 +1,146 @@
+---
+layout: default
+---
+
+<style>
+  /* Apply Outfit font to all elements within the about-page */
+  .about-page,
+  .about-page * {
+    font-family: 'Outfit', sans-serif !important;
+  }
+  
+  /* Specific styles for headers to ensure they use Outfit font */
+  .about-page h1, 
+  .about-page h2, 
+  .about-page h3, 
+  .about-page h4, 
+  .about-page h5, 
+  .about-page h6,
+  .about-page .display-2,
+  .about-page .display-4 {
+    font-family: 'Outfit', sans-serif !important;
+  }
+  
+  /* Additional styles to override any conflicting classes */
+  .about-page .card-body *,
+  .about-page .text-center * {
+    font-family: 'Outfit', sans-serif !important;
+  }
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<div class="about-page">
+
+    <section class="wrapper bg-custom">
+        <div class="container pt-10 pb-19 pt-md-10 pb-md-20 text-center">
+          <div class="row">
+            <div class="col-md-10 col-xl-8 mx-auto">
+                <h1 class="display-2 mb-5">{{ site.data.about[page.locale].about.title }}</h1>
+            </div>
+            <!-- /column -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /section -->
+    
+    <section class="wrapper bg-light">
+        <div class="container pb-14 pb-md-16">
+          <div class="row">
+            <div class="col-lg-10 mx-auto">
+              <div class="blog single mt-n18">
+                <div class="card shadow-lg">
+                  <div class="card-body">
+                    <h2 class="h1 mb-3">{{ site.data.about[page.locale].about.header }}</h2>
+                    <p> {{ site.data.about[page.locale].about.paragraph }}</p>  
+
+                    <img style="width: 100%;" src="/img/my/excellence.png"/>
+                    <div class="my-10"> 
+                      <h2 class="h1 my-3">{{ site.data.about[page.locale].about.whyCM }}</h2>
+                      <ul class="icon-list bullet-bg bullet-soft-primary">
+                        <li>
+                          <span><i class="uil uil-check"></i></span>
+                          
+                          <span>
+                            <h4 class="mb-1">{{ site.data.about[page.locale].about.point1 }}</h4>
+                            <p class="mb-0">{{ site.data.about[page.locale].about.point1Desc }}</p>
+                          </span>
+                         
+                        </li>
+                        <li>
+                          <span><i class="uil uil-check"></i></span>
+                          
+                          <span>
+                            <h4 class="mb-1">{{ site.data.about[page.locale].about.point2 }}</h4>
+                            <p class="mb-0">{{ site.data.about[page.locale].about.point2Desc }}</p>
+                          </span>
+                          
+                        </li>
+                        <li>
+                          <span><i class="uil uil-check"></i></span>
+                          <span>
+                            <h4 class="mb-1">{{ site.data.about[page.locale].about.point3 }}</h4>
+                            <p class="mb-0">{{ site.data.about[page.locale].about.point3Desc }}</p>
+                          </span>
+                          
+                        </li>
+                        <li>
+                          <span><i class="uil uil-check"></i></span>
+                          <span>
+                            <h4 class="mb-1">{{ site.data.about[page.locale].about.point4 }}</h4>
+                            <p class="mb-0">{{ site.data.about[page.locale].about.point4Desc }}</p>
+                          </span>
+                          
+                        </li>
+                        <li>
+                          <span><i class="uil uil-check"></i></span>
+                          <span>
+                            <h4 class="mb-1">{{ site.data.about[page.locale].about.point5 }}</h4>
+                            <p class="mb-0">{{ site.data.about[page.locale].about.point5Desc }}</p>
+                          </span>
+                          
+                        </li>
+                      </ul>
+                    </div>
+
+                    <h1 class="text-center">{{ site.data.about[page.locale].about.quote }} 
+                      <br>{{ site.data.about[page.locale].about.quote2 }} 
+                      <span class="rotator-fade text-primary">{{ site.data.about[page.locale].about.quotewords }}</span>                      
+                      {% if page.locale == 'cn' %}
+                      <span> {{ site.data.about[page.locale].about.quote3 }}</span>
+                      {% endif %}
+                    </h1>                  
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+              </div>
+              <!-- /.blog -->
+            </div>
+            <!-- /column -->
+          </div>
+          <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+    <!-- /section -->
+
+    <!-- Try Coding Mind -->
+    <section class="wrapper bg-soft-primary">
+      <div class="container py-12 py-md-12">
+        <div class="row text-center">
+          <div class="col-md-10 mx-auto">
+            <h3 class="display-4 text-navy">{{ site.data.about[page.locale].trial.header }} </h3>
+            <p class="lead mb-7 mb-md-7">{{ site.data.about[page.locale].trial.lead }} </p>
+            <a href="./free-trial" class="btn btn-primary rounded-pill me-0 me-md-4 mb-4 mb-md-0">
+              {{ site.data.about[page.locale].trial.button }} 
+            </a>
+          </div>
+        </div>
+        <!--/div -->
+      </div>
+      <!-- /.container -->
+    </section>
+    <!-- /section -->
+</div>

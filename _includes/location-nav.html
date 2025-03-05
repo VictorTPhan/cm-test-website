@@ -1,0 +1,161 @@
+<!-- {% if page.url contains '/cn/' %}
+    {% assign parts  = page.url | split: '/' %}
+    {% assign location_name = parts[2] %}
+    {% assign translated_url = page.url | replace: '/cn/', '/' %}
+{% else %}
+    {% assign parts  = page.url | split: '/' %}
+    {% assign location_name = parts[1] %}
+    {% assign translated_url = '/cn' | append: page.url %}
+{% endif %} -->
+
+{% assign parts = page.url | split: '/' %}
+
+{% if page.url contains '/cn/' %}
+    {% assign location_name = parts[2] %}
+    {% assign logo_url = '/cn/' | append: location_name %}
+    {% assign translated_url = page.url | replace: '/cn/', '/' %}
+{% else %}
+    {% assign location_name = parts[1] %}
+    {% assign logo_url = '/' | append: location_name %}
+    {% assign translated_url = '/cn' | append: page.url %}
+{% endif %}
+{% assign has_translation = site.locations | where_exp: "item", "item.url == translated_url" | first %}
+{%- assign location_data = site.data.locations[location_name] -%}
+
+<header class="wrapper">
+  <nav class="navbar navbar-expand-lg classic transparent !important; navbar-light pb-1">
+    <div class="container flex-lg-row flex-nowrap align-items-center">
+        <div class="navbar-brand">
+            <a href="{{ logo_url }}">
+            <img class="h-9" src="{{ site.logo }}" alt="" />
+          </a>
+          <!-- <div class="hidden-xs col-sm-6 center-title">
+            <div class="post-category mt-3 text-primary"><i class="uil uil-location-point me-1"></i>
+              {% assign locationText = location_name | replace: "-", " " | upcase %}
+              {{ locationText }}
+            </div>
+          </div> -->
+        </div>
+        <div class="navbar-other ms-auto">
+          <ul class="navbar-nav flex-row align-items-center">
+            {% if has_translation %}
+            <li class="nav-item language-select text-uppercase d-lg-none">
+              <a class="nav-link" role="button"  
+              href="
+              {% if page.url contains '/cn/' %}
+                  {{ page.url | replace: '/cn/', '/' }}
+              {% else %}
+                  {{ site.data.nav.en.nav.switchLangURL }}{{ page.url | remove_first: '/' }}
+              {% endif %}
+              ">  
+              {{ site.data.nav[page.locale].nav.switchLang }}
+              </a>
+            </li>
+            {% endif %}
+            <li class="nav-item d-lg-none">
+              <button class="hamburger offcanvas-nav-btn"><span></span></button>
+            </li>
+          </ul>
+          <!-- /.navbar-nav -->
+        </div>
+        <!-- /.navbar-other -->
+      <!-- /.d-flex -->
+      <div class="navbar-collapse-wrapper d-flex flex-row align-items-center justify-content-between">
+        <div class="navbar-collapse offcanvas offcanvas-nav offcanvas-start">
+          <div class="offcanvas-header d-lg-none">
+            <h3 class="text-white fs-30 mb-0">Coding Mind</h3>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+              aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body d-flex flex-column h-100">
+            <ul class="navbar-nav">
+
+              {% assign pages = site.locations | where_exp: "item", "item.path contains location_name" | where: "locale", page.locale | sort: "order" %}
+              {% for page in pages %}
+              {% unless page.exclude == true or page.path contains '/events/' or page.path contains '/_courses/' %}
+              {% if location_name == 'sandiego' and page.title == 'Schedule' %}
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="scheduleDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Schedule
+                  </a>
+                  <ul class="dropdown-menu" aria-labelledby="scheduleDropdown">
+                    <li><a class="dropdown-item" href="{{ page.url }}">Group Class</a></li>
+                    <li><a class="dropdown-item" href="{% assign trial_page = site.locations | where: "layout", "location-freetrial" | where: "locale", page.locale | first %}{{ trial_page.url }}">Private Class</a></li>
+                  </ul>
+                </li>
+              {% else %}
+                <li class="nav-item">
+                  <a class="nav-link nav-text-solid" href="{{ page.url }}">
+                    {% if page.title == "Summer Camp" %}
+                      <span class="underline-3 style-3 primary">{{ page.title }}</span>
+                    {% else %}
+                      {{ page.title }}
+                    {% endif %}
+                  </a>
+                </li>
+              {% endif %}
+              <!-- <li class="nav-item"><a class="nav-link nav-text-solid" href="{{ page.url }}">
+                  {% if page.title == "Summer Camp" %}
+                  <span class="underline-3 style-3 primary">{{ page.title }}</span>
+                  {% else %}
+                  {{ page.title }}
+                  {% endif %}
+                </a></li> -->
+              {% endunless %}
+              {% endfor %}
+              <li class="nav-item">
+                <a class="nav-link dropdown-item" href="https://www.sharemyworks.com" target="_blank">{{
+                  site.data.nav[page.locale].nav.learningCenter }}</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link dropdown-item" href="{{ location_data.paymenturl }}" target="_blank">Membership Portal</a>
+              </li>
+
+            </ul>
+            <!-- /.navbar-nav -->
+            <div class="offcanvas-footer d-lg-none">
+              <div>
+                <a href="mailto:{{ location_data.contact.email}}" class="link-inverse">{{
+                  location_data.contact.email}}</a>
+                <br>{{ location_data.contact.phone}} <br>
+                <!-- /.social -->
+              </div>
+            </div>
+            <!-- /.offcanvas-footer -->
+          </div>
+        </div>
+        <!-- /.navbar-collapse -->
+        <div class="navbar-other w-100 d-flex">
+          <ul class="navbar-nav flex-row align-items-center ms-auto">
+            {% if has_translation %}
+            <li class="nav-item language-select text-uppercase d-none d-lg-block">
+              <a class="nav-link" role="button"  
+              href="
+              {% if page.url contains '/cn/' %}
+                  {{ page.url | replace: '/cn/', '/' }}
+              {% else %}
+                  {{ site.data.nav.en.nav.switchLangURL }}{{ page.url | remove_first: '/' }}
+              {% endif %}
+              ">  
+              {{ site.data.nav[page.locale].nav.switchLang }}
+              </a>
+            </li>
+            {% endif %}
+            {% assign location_name = location_name | downcase | strip %}
+            {% unless location_name == "seattle" or location_name == "sandiego"%}
+            <li class="nav-item">
+              <a href="/{{ location_name }}/pricing" target="_blank" class="btn btn-sm btn-navy rounded-pill">Enroll Now</a>
+            </li>
+            {% endunless %}
+
+          </ul>
+          <!-- /.navbar-nav -->
+        </div>
+        <!-- /.navbar-other -->
+      </div>
+      <!-- /.navbar-collapse-wrapper -->
+    </div>
+    <!-- /.container -->
+  </nav>
+  <!-- /.navbar -->
+</header>

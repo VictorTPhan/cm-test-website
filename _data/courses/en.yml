@@ -1,0 +1,62 @@
+name: EN
+
+courses:
+  header: Explore Our Courses
+  lead: Our courses prioritize 'Learning by Doing', incorporating project-based learning assignments for hands-on and real-world experience. We move beyond traditional teaching methods, allowing students to apply their coding knowledge through innovative projects, preparing students for coding competitions, research prospects, and startup challenges, fostering competitive, research, and entrepreneurial mindsets.
+  L1title: "L1: Block Based Programming"
+  L1description: "Block Based Programming was developed by MIT's Media Lab to be suitable for beginners. Students can quickly learn programming concepts!"
+  L2title: "L2: Script Based Programming"
+  L2description: "Learn basic programming using scripting languages such as Javascript or Lua. Students practice practical coding gaining a good foundation."
+  L3title: "L3: Intermediate Programming"
+  L3description: "Learn in-depth languages such as Python. Practice writing programs that solve complex problems, and get an introduction to algorithms."
+  L4title: "L4: Applied Programming"
+  L4description: "Having a foundation with code already, students can learn programming in applied topics developing projects in their preferred direction."
+  L5title: "L5: Competitive Programming"
+  L5description: "Advanced students prepare for algorithm competitions, science fairs, AP CS exams, and partake in enrichment projects."
+  results: "Results: "
+  L1Filter: "L1 Block Programming"
+  L2Filter: "L2 Script Programming"
+  L3Filter: "L3 Intermediate Programming"
+  L4Filter: "L4 Applied Programming"
+  L5Filter: "L5 Competitive Programming"
+  SummerFilter: "Summer Camps"
+  learnMore: "Learn More"
+
+filter:
+  filterButton: "Filter: Pathway Level"
+  filterTag: "FILTER BY PATHWAY"
+  clearFilters: "Clear All Filters"
+
+coursedetail:
+  trialButton: "Try a Free Class"
+  levelTag: "Level"
+  pathwayTag: "Pathway"
+  skillTag: "Skill Level"
+  classSizeTag: "Class Size"
+  classSize: "1-on-1 or Group (2-4 students)"
+  learningObjectives: "Learning Objectives"
+  # startingAt: "Starting at"
+  # perMonth: "/ month"
+  # classes: "4 classes / month &nbsp x &nbsp $ 60 / class"
+  courseFeatures: "Course Features"
+  inpersonOnline: "In-person or Online Available"
+  projectLearning: "Project-Oriented Learning"
+  exerciseSupport: "Exercise System Support"
+  trial: "Free Trial"
+  cancel: "Cancel Anytime"
+  scheduleTitle: "Scheduling"
+  scheduleDescription: "Upon finishing the trial and assessment, classes will be scheduled based on the student’s availability. Please contact us for the Trial class. "
+  projectTitle: "Project Based"
+  projectDescription: "Our courses are designed to lead students to build their own startup projects."
+  instructorTitle: "Experienced Instructors"
+  instructorDescription: "Passion for code. Unmatched expertise. Personality that brings interaction and encouragement always. "
+  competitionTitle: "Aim at Competitions"
+  competitionDescription: "Beyond learning programming, students are prepared to compete in science fairs, research, and entrepreneurship competitions. "
+  otherCourses: "Other Courses You Might Also Like"
+  trialTitle: "Start learning with Coding Mind!"
+  trialSubTitle: "Turn your child’s passion into a professional skill."
+  trialButton2: "Book Your First Free Class"
+  homePage: "Home"
+  coursesPage: "Courses"
+
+
